@@ -1,5 +1,6 @@
 from django.db import models
 from fleet.models import Airplane
+from django.conf import settings
 
 class Flight(models.Model):
     ESTADOS = [
@@ -18,7 +19,12 @@ class Flight(models.Model):
     duracion = models.DurationField()
     estado = models.CharField(max_length=5, choices=ESTADOS, default="PROG")
     precio_base = models.DecimalField(max_digits=10, decimal_places=2)
-
+    managers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        related_name="flights_managed",
+        help_text="Usuarios que gestionan este vuelo",
+    )
     class Meta:
         ordering = ["fecha_salida"]
         indexes = [models.Index(fields=["origen", "destino", "fecha_salida"])]
