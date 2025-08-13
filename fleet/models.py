@@ -5,7 +5,12 @@ class Airplane(models.Model):
     capacidad = models.PositiveIntegerField()
     filas = models.PositiveIntegerField()
     columnas = models.PositiveIntegerField()
-
+    matricula = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    fabricante = models.CharField(max_length=50, null=True, blank=True)
+    anio_fabricacion = models.PositiveIntegerField(null=True, blank=True)
+    ultimo_mantenimiento = models.DateField(null=True, blank=True)
+    notas_tecnicas = models.TextField(null=True, blank=True)
+    
     def __str__(self):
         return f"{self.modelo} ({self.filas}x{self.columnas})"
 
