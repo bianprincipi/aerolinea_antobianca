@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Mis reservas{% endblock %}
+{% block content %}
+<h1>Mis reservas</h1>
+<div class="grid">
+  {% for r in reservas %}
+    <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div><strong>{{ r.vuelo.origen }} → {{ r.vuelo.destino }}</strong></div>
+        <small>Código: {{ r.codigo_reserva }} • Estado: {{ r.get_estado_display }} • Asiento: {{ r.asiento.numero|default:"-" }}</small>
+      </div>
+      <div>
+        <small>{{ r.vuelo.fecha_salida|date:'d/m/Y H:i' }}</small>
+      </div>
+    </div>
+  {% empty %}
+    <p>No tenés reservas todavía.</p>
+  {% endfor %}
+</div>
+{% endblock %}

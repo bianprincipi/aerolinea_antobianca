@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Buscar vuelos{% endblock %}
+{% block content %}
+<h1>Buscar vuelos</h1>
+<div class="grid">
+  {% for f in flights %}
+    <article class="card" style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-weight:700">{{ f.origen }} → {{ f.destino }}</div>
+        <small>{{ f.fecha_salida|date:'d/m H:i' }} — {{ f.fecha_llegada|date:'d/m H:i' }} • {{ f.duracion }}</small>
+      </div>
+      <div style="text-align:right">
+        <div style="font-weight:700">${{ f.precio_base }}</div>
+        <a class="btn" href="{% url 'web:flight_detail' f.pk %}">Ver</a>
+      </div>
+    </article>
+  {% empty %}
+    <p>No hay vuelos cargados aún.</p>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Ingresar{% endblock %}
+{% block content %}
+<h1>Ingresar</h1>
+<form method="post" class="card" style="max-width:420px">{% csrf_token %}
+  {{ form.non_field_errors }}
+  <div style="margin:.5rem 0"><label>Usuario</label>{{ form.username }}</div>
+  <div style="margin:.5rem 0"><label>Contraseña</label>{{ form.password }}</div>
+  <button class="btn" type="submit">Entrar</button>
+  <p style="margin-top:.5rem"><small>¿No tenés cuenta? <a href="{% url 'accounts:signup' %}">Registrate</a></small></p>
+</form>
+{% endblock %}

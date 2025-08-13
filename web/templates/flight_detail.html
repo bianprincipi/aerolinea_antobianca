@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Vuelo {{ flight.origen }}→{{ flight.destino }}{% endblock %}
+{% block content %}
+<h1>Vuelo {{ flight.origen }} → {{ flight.destino }}</h1>
+<p>
+  Sale: {{ flight.fecha_salida|date:'d/m/Y H:i' }} —
+  Llega: {{ flight.fecha_llegada|date:'d/m/Y H:i' }} —
+  Duración: {{ flight.duracion }} —
+  Precio base: ${{ flight.precio_base }}
+</p>
+<a class="btn" href="{% url 'web:seat_map' flight.pk %}">Elegir asiento</a>
+{% endblock %}

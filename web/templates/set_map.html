@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Elegir asiento{% endblock %}
+{% block content %}
+<h1>Elegí tu asiento — Vuelo {{ flight.origen }}→{{ flight.destino }}</h1>
+<form method="post">{% csrf_token %}
+  <div class="grid" style="grid-template-columns:repeat(6,minmax(0,1fr))">
+    {% for s in seats %}
+      <label class="card" style="text-align:center">
+        <div style="font-weight:700">{{ s.numero }}</div>
+        <div><small>{{ s.get_tipo_display }}</small></div>
+        <div><small>Estado: {{ s.get_estado_display }}</small></div>
+        {% if s.estado == "DISP" %}
+          <input type="radio" name="seat_id" value="{{ s.id }}" required>
+        {% else %}
+          <small>No disponible</small>
+        {% endif %}
+      </label>
+    {% endfor %}
+  </div>
+  <div style="margin-top:1rem">
+    <button class="btn" type="submit">Confirmar reserva</button>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{% block title %}Aerolínea Demo{% endblock %}</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'web/theme.css' %}">
+</head>
+<body>
+<header class="navbar">
+  <div class="container topbar">
+    <a href="/" class="brand">✈ Aerolínea Demo</a>
+    <nav class="menu">
+      <a href="/">Comprá</a>
+      <a href="/reservas/mias/">Mis viajes</a>
+      <a href="#">Check-in</a>
+      <a href="#">Estado de vuelo</a>
+      {% if user.is_authenticated %}
+        <span class="badge">{{ user.username }}</span>
+        <a href="{% url 'accounts:logout' %}">Salir</a>
+      {% else %}
+        <a href="{% url 'accounts:login' %}">Ingresar</a>
+        <a class="badge" href="{% url 'accounts:signup' %}">Registrate</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">{% block hero %}{% endblock %}</div>
+  </section>
+  <section class="container pad">{% block content %}{% endblock %}</section>
+</main>
+
+<footer class="footer">
+  <div class="container foot">
+    <div>© {{ now|date:'Y' }} Aerolínea Demo</div>
+    <div><small>Inspirado en AA • Demo educativa</small></div>
+  </div>
+</footer>
+</body>
+</html>
