@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% block content %}
+<h3>Boleto electrónico</h3>
+<div class="card"><div class="card-body">
+  <p><strong>Código:</strong> {{ reserva.codigo_reserva|default:reserva.code }}</p>
+  <p><strong>Pasajero:</strong> {{ reserva.pasajero.nombre|default:reserva.passenger.name }} ({{ reserva.pasajero.documento|default:reserva.passenger.document }})</p>
+  <p><strong>Vuelo:</strong> {{ reserva.vuelo.origen }} → {{ reserva.vuelo.destino }} | {{ reserva.vuelo.fecha_salida|date:"Y-m-d H:i" }}</p>
+  <p><strong>Asiento:</strong> {{ reserva.asiento.numero|default:reserva.asiento.number }}</p>
+  {% if reserva.boleto and reserva.boleto.codigo_barra %}
+    <img src="{{ reserva.boleto.codigo_barra.url }}" alt="QR">
+  {% endif %}
+</div></div>
+<a class="btn btn-outline-primary mt-3" href="/historial/">Volver al historial</a>
+{% endblock %}

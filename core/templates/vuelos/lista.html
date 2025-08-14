@@ -1,0 +1,23 @@
+{% extends 'base.html' %}{% block content %}
+<h3>Vuelos</h3>
+<form class="row g-2 mb-3" method="get">
+  <div class="col-md-4"><input class="form-control" name="origen" placeholder="Origen" value="{{ origen }}"></div>
+  <div class="col-md-4"><input class="form-control" name="destino" placeholder="Destino" value="{{ destino }}"></div>
+  <div class="col-md-3"><input class="form-control" type="date" name="fecha" value="{{ fecha }}"></div>
+  <div class="col-md-1 d-grid"><button class="btn btn-primary">Buscar</button></div>
+</form>
+<table class="table table-striped">
+  <thead><tr><th>Fecha</th><th>Origen</th><th>Destino</th><th>Avión</th><th>Precio</th><th></th></tr></thead>
+  <tbody>
+  {% for v in vuelos %}
+    <tr>
+      <td>{{ v.fecha_salida|date:"Y-m-d H:i" }}</td>
+      <td>{{ v.origen }}</td><td>{{ v.destino }}</td>
+      <td>{{ v.avion.modelo|default:v.airplane }}</td>
+      <td>${{ v.precio_base|default:v.base_price }}</td>
+      <td><a class="btn btn-sm btn-outline-primary" href="{% url 'portal_vuelo_detalle' v.id %}">Ver</a></td>
+    </tr>
+  {% empty %}<tr><td colspan="6">No se encontraron vuelos.</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="p-4 bg-light rounded-3">
+  <h1 class="display-6">Buscá tu próximo vuelo</h1>
+  <form class="row g-2 mt-2" action="/vuelos/" method="get">
+    <div class="col-md-4"><input class="form-control" name="origen" placeholder="Origen" required></div>
+    <div class="col-md-4"><input class="form-control" name="destino" placeholder="Destino" required></div>
+    <div class="col-md-3"><input class="form-control" type="date" name="fecha"></div>
+    <div class="col-md-1 d-grid"><button class="btn btn-primary">Buscar</button></div>
+  </form>
+</div>
+{% endblock %}

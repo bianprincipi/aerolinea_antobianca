@@ -1,0 +1,29 @@
+{% extends 'base.html' %}{% block content %}
+<h3>Mi perfil</h3>
+<form method="post" class="row g
+
+cat > core/templates/pasajeros/perfil.html <<'EOF'
+{% extends 'base.html' %}{% block content %}
+<h3>Mi perfil</h3>
+<form method="post" class="row g-2">{% csrf_token %}
+  {% if pasajero %}
+    <div class="col-md-6"><label>Nombre</label>
+      <input class="form-control" name="nombre" value="{{ pasajero.nombre|default:pasajero.name }}">
+    </div>
+    <div class="col-md-6"><label>Documento</label>
+      <input class="form-control" name="documento" value="{{ pasajero.documento|default:pasajero.document }}">
+    </div>
+    <div class="col-md-6"><label>Email</label>
+      <input class="form-control" type="email" name="email" value="{{ pasajero.email }}">
+    </div>
+    <div class="col-md-6"><label>Teléfono</label>
+      <input class="form-control" name="telefono" value="{{ pasajero.telefono|default:pasajero.phone }}">
+    </div>
+    <div class="col-12 mt-2">
+      <button class="btn btn-primary">Guardar</button>
+    </div>
+  {% else %}
+    <p class="text-muted">No se pudo vincular tu perfil automáticamente.</p>
+  {% endif %}
+</form>
+{% endblock %}
