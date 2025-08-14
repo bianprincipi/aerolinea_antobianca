@@ -1,21 +1,112 @@
-{% extends 'base.html' %}
+{% extends 'web/base.html' %}
+{% load static %}
+
 {% block title %}Buscar vuelos{% endblock %}
+
 {% block content %}
-<h1>Buscar vuelos</h1>
-<div class="grid">
-  {% for f in flights %}
-    <article class="card" style="display:flex;justify-content:space-between;align-items:center">
+<div class="search-hero">
+  <div class="search-panel">
+    <form method="get" action="{% url 'web:flights_list' %}" class="controls">
       <div>
-        <div style="font-weight:700">{{ f.origen }} → {{ f.destino }}</div>
-        <small>{{ f.fecha_salida|date:'d/m H:i' }} — {{ f.fecha_llegada|date:'d/m H:i' }} • {{ f.duracion }}</small>
+        <label class="label">Origen</label>
+        <input class="input" name="origen" list="origenes" value="{{ origen }}" placeholder="Ej: COR o Córdoba">
       </div>
-      <div style="text-align:right">
-        <div style="font-weight:700">${{ f.precio_base }}</div>
+      <div>
+        <label class="label">Destino</label>
+        <input class="input" name="destino" list="destinos" value="{{ destino }}" placeholder="Ej: EZE o Buenos Aires">
+      </div>
+      <div>
+        <label class="label">Fecha</label>
+        <input class="input" type="date" name="fecha" value="{{ fecha }}">
+      </div>
+      <div>
+        <label class="label">Ordenar por</label>
+        <select class="input" name="orden">
+          <option value="fecha" {% if orden == "fecha" %}selected{% endif %}>Fecha</option>
+          <option value="precio" {% if orden == "precio" %}selected{% endif %}>Precio</option>
+          <option value="duracion" {% if orden == "duracion" %}selected{% endif %}>Duración</option>
+        </select>
+      </div>
+      <div class="go">
+        <button class="btn" type="submit">Buscar</button>
+      </div>
+    </form>
+
+    {% if airports %}
+      <datalist id="origenes">
+        {% for a in airports %}
+          <option value="{{ a.code }}">{{ a.city }} – {{ a.name }} ({{ a.country }})</option>
+        {% endfor %}
+      </datalist>
+      <datalist id="destinos">
+        {% for a in airports %}
+          <option value="{{ a.code }}">{{ a.city }} – {{ a.name }} ({{ a.country }})</option>
+        {% endfor %}
+      </datalist>
+    {% endif %}
+  </div>
+</div>
+
+<hr>
+
+<h2>Resultados ({{ total }})</h2>
+<div class="list">
+  {% for f in vuelos %}
+    <article class="card flight-card">
+      <div class="airline">
+        <div class="logo">AR</div>
+        <div>
+          <div class="route">{{ f.origen }} → {{ f.destino }}</div>
+          <small>{{ f.avion.modelo }}</small>
+        </div>
+      </div>
+      <div>
+        <div><strong>Sale</strong> {{ f.fecha_salida|date:'d/m/Y H:i' }}</div>
+        <small>Directo</small>
+      </div>
+      <div>
+        <div><strong>Llega</strong> {{ f.fecha_llegada|date:'d/m/Y H:i' }}</div>
+        <small>—</small>
+      </div>
+      <div>
+        <div><strong>Duración</strong> {{ f.duracion }}</div>
+        <small class="badge2">{{ f.get_estado_display }}</small>
+      </div>
+      <div class="price">
+        ${{ f.precio_base }}<br>
         <a class="btn" href="{% url 'web:flight_detail' f.pk %}">Ver</a>
       </div>
     </article>
   {% empty %}
-    <p>No hay vuelos cargados aún.</p>
+    <div class="card">No se encontraron vuelos.</div>
   {% endfor %}
 </div>
+
+{% if page_obj.has_other_pages %}
+<div class="pagination">
+  {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}&origen={{ origen }}&destino={{ destino }}&fecha={{ fecha }}&orden={{ orden }}">Anterior</a>
+  {% endif %}
+  <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}&origen={{ origen }}&destino={{ destino }}&fecha={{ fecha }}&orden={{ orden }}">Siguiente</a>
+  {% endif %}
+</div>
+{% endif %}
+
+<hr>
+
+<h2>Vuelos baratos</h2>
+<div class="carousel">
+  {% for f in baratos %}
+    <div class="card cheap-flight">
+      <div class="route">{{ f.origen }} → {{ f.destino }}</div>
+      <div class="price">${{ f.precio_base }}</div>
+      <small>{{ f.fecha_salida|date:'d/m/Y' }}</small>
+    </div>
+  {% empty %}
+    <p>No hay vuelos baratos disponibles.</p>
+  {% endfor %}
+</div>
+
 {% endblock %}

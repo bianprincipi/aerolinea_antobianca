@@ -1,30 +1,27 @@
+# flights/admin.py
 from django.contrib import admin
 from .models import Flight
-from django.http import HttpResponse
-import csv
 
 @admin.register(Flight)
 class FlightAdmin(admin.ModelAdmin):
-    list_display = ("origen","destino","fecha_salida","avion","estado")
-    actions = ["export_passengers_csv"]
+    list_display = (
+        "origen",
+        "destino",
+        "fecha_salida",
+        "fecha_llegada",
+        "precio_base",
+        "estado",
+    )
+    list_filter = ("origen", "destino", "estado")
+    date_hierarchy = "fecha_salida"
+    ordering = ("fecha_salida",)
 
-    def export_passengers_csv(self, request, queryset):
-        """
-        Exporta un CSV con: Vuelo, Origen, Destino, Pasajero, Documento, Asiento, Estado Reserva
-        """
-        from booking.models import Reservation
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="pasajeros_por_vuelo.csv"'
-        writer = csv.writer(response)
-        writer.writerow(["Vuelo","Origen","Destino","Salida","Pasajero","Documento","Asiento","Estado Reserva"])
-        for flight in queryset:
-            reservas = Reservation.objects.filter(vuelo=flight).select_related("pasajero","asiento")
-            for r in reservas:
-                writer.writerow([
-                    flight.id, flight.origen, flight.destino, flight.fecha_salida,
-                    r.pasajero.nombre, r.pasajero.documento,
-                    getattr(r.asiento, "numero", "-"),
-                    r.get_estado_display()
-                ])
-        return response
-    export_passengers_csv.short_description = "Exportar pasajeros (CSV)"
+    # ⚠️ Requisito para que funcione el autocomplete desde ReservationAdmin
+    search_fields = (
+        "origen",
+        "destino",
+        "avion__modelo", # FK al avión (opcional, si existe)
+    )
+
+    # Opcional: si en tu admin querés autocompletar el avión
+    autocomplete_fields = ("avion",)  # quitá si no existe el FK
