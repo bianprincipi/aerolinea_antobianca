@@ -12,3 +12,10 @@ class Passenger(models.Model):
 
     def __str__(self):
         return f"{self.nombre} ({self.documento})"
+
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['documento']),
+            models.Index(fields=['email']),
+        ]

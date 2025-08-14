@@ -184,21 +184,21 @@ def ver_boleto(request, codigo):
 
 @login_required
 @user_passes_test(is_staff)
+
 def pasajeros_por_vuelo(request, vuelo_id):
-    vuelo = get_object_or_404(Vuelo, id=vuelo_id)
-    reservas = Reserva.objects.filter(vuelo=vuelo).select_related('pasajero','asiento').order_by('pasajero__nombre')
-    if request.GET.get('export')=='csv':
-        r=HttpResponse(content_type='text/csv'); r['Content-Disposition']=f'attachment; filename="pasajeros_vuelo_{vuelo_id}.csv"'
-        w=csv.writer(r); w.writerow(['Reserva','Pasajero','Documento','Email','Asiento','Estado'])
-        for x in reservas:
-            w.writerow([getattr(x,'codigo_reserva',x.pk),
-                        getattr(x.pasajero,'nombre',x.pasajero_id),
-                        getattr(x.pasajero,'documento',getattr(x.pasajero,'document',x.pasajero_id)),
-                        getattr(x.pasajero,'email',''),
-                        getattr(x.asiento,'numero',getattr(x.asiento,'number',x.asiento_id)),
-                        getattr(x,'estado','')])
-        return r
-    return render(request, 'reportes/pasajeros_por_vuelo.html', {'vuelo':vuelo,'reservas':reservas})
+    vuelo = get_object_or_404(Vuelo, pk=vuelo_id)
+    reservas = Reserva.objects.filter(vuelo=vuelo).select_related('pasajero','asiento').order_by('id')
+
+    if request.GET.get('export') == 'csv':
+        resp = HttpResponse(content_type='text/csv')
+        resp['Content-Disposition'] = f'attachment; filename="pasajeros_vuelo_{vuelo_id}.csv"'
+        writer = csv.writer(resp)
+        writer.writerow(["codigo_reserva","pasajero","documento","email","asiento","estado"])
+        for r in reservas:
+            writer.writerow([getattr(r,'codigo_reserva',''), r.pasajero.nombre, r.pasajero.documento, r.pasajero.email, getattr(r.asiento,'numero',r.asiento_id), r.estado])
+        return resp
+
+    return render(request, 'reportes/pasajeros_por_vuelo.html', {'vuelo': vuelo, 'reservas': reservas})
 
 
 from portal_app.forms import SignupForm
