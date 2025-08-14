@@ -1,13 +1,19 @@
 {% extends 'base.html' %}{% block content %}
 <h3>Boleto electrónico</h3>
 <div class="card"><div class="card-body">
-  <p><strong>Código:</strong> {{ reserva.codigo_reserva|default:reserva.code }}</p>
-  <p><strong>Pasajero:</strong> {{ reserva.pasajero.nombre|default:reserva.passenger.name }} ({{ reserva.pasajero.documento|default:reserva.passenger.document }})</p>
+  <p><strong>Código:</strong> {{ reserva.codigo_reserva }}</p>
+  <p><strong>Pasajero:</strong> {{ reserva.pasajero.nombre }} ({{ reserva.pasajero.documento }})</p>
   <p><strong>Vuelo:</strong> {{ reserva.vuelo.origen }} → {{ reserva.vuelo.destino }} | {{ reserva.vuelo.fecha_salida|date:"Y-m-d H:i" }}</p>
-  <p><strong>Asiento:</strong> {{ reserva.asiento.numero|default:reserva.asiento.number }}</p>
-  {% if reserva.boleto and reserva.boleto.codigo_barra %}
+  <p><strong>Asiento:</strong> {{ reserva.asiento.numero }}</p>
+
+  {# Mostrar QR si es Image/FileField (tiene .url); si es CharField, mostrar texto #}
+  {% if reserva.boleto and reserva.boleto.codigo_barra and reserva.boleto.codigo_barra.url %}
     <img src="{{ reserva.boleto.codigo_barra.url }}" alt="QR">
+  {% else %}
+    {% if reserva.boleto and reserva.boleto.codigo_barra %}
+      <p class="text-muted"><strong>QR:</strong> {{ reserva.boleto.codigo_barra }}</p>
+    {% endif %}
   {% endif %}
 </div></div>
-<a class="btn btn-outline-primary mt-3" href="/historial/">Volver al historial</a>
+<a class="btn btn-success mt-3" href="{% url 'portal_boleto_pdf' reserva.codigo_reserva %}">Descargar PDF</a> <a class="btn btn-outline-primary mt-3" href="/historial/">Volver al historial</a>
 {% endblock %}

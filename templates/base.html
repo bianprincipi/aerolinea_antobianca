@@ -25,7 +25,7 @@
           <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Salir</a></li>
         {% else %}
           <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Ingresar</a></li>
-          <li class="nav-item"><a class="nav-link" href="/signup/">Crear cuenta</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Crear cuenta</a></li>
         {% endif %}
       </ul>
     </div>

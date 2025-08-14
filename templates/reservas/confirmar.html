@@ -1,7 +1,7 @@
 {% extends 'base.html' %}{% block content %}
 <h3>Confirmar reserva</h3>
 <p>Vuelo: {{ vuelo.origen }} → {{ vuelo.destino }} ({{ vuelo.fecha_salida|date:"Y-m-d H:i" }})</p>
-<p>Asiento: <strong>{{ asiento.numero|default:asiento.number }}</strong> | Precio: ${{ vuelo.precio_base|default:vuelo.base_price }}</p>
+<p>Asiento: <strong>{{ asiento.numero }}</strong> | Precio: ${{ vuelo.precio_base }}</p>
 <form method="post">{% csrf_token %}
   <button name="confirmar" value="1" class="btn btn-success">Confirmar</button>
   <a href="{% url 'portal_vuelo_detalle' vuelo.id %}" class="btn btn-secondary">Cancelar</a>

@@ -5,14 +5,16 @@
   <tbody>
   {% for r in reservas %}
     <tr>
-      <td>{{ r.codigo_reserva|default:r.code }}</td>
+      <td>{{ r.codigo_reserva }}</td>
       <td>{{ r.vuelo.origen }} → {{ r.vuelo.destino }} ({{ r.vuelo.fecha_salida|date:"Y-m-d H:i" }})</td>
-      <td>{{ r.asiento.numero|default:r.asiento.number }}</td>
-      <td>${{ r.precio|default:r.price }}</td>
-      <td>{{ r.get_estado_display|default:r.status }}</td>
-      <td><a class="btn btn-sm btn-outline-primary" href="{% url 'portal_ver_boleto' r.codigo_reserva|default:r.code %}">Ver</a></td>
+      <td>{{ r.asiento.numero }}</td>
+      <td>${{ r.precio }}</td>
+      <td>{{ r.get_estado_display|default:r.estado }}</td>
+      <td><a class="btn btn-sm btn-outline-primary" href="{% url 'portal_ver_boleto' r.codigo_reserva %}">Ver</a></td>
     </tr>
-  {% empty %}<tr><td colspan="6">Aún no tenés reservas.</td></tr>{% endfor %}
+  {% empty %}
+    <tr><td colspan="6">Aún no tenés reservas.</td></tr>
+  {% endfor %}
   </tbody>
 </table>
 {% endblock %}

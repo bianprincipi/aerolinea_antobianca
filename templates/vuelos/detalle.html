@@ -1,6 +1,6 @@
 {% extends 'base.html' %}{% block content %}
 <h3>{{ vuelo.origen }} → {{ vuelo.destino }} | {{ vuelo.fecha_salida|date:"Y-m-d H:i" }}</h3>
-<p>Precio base: ${{ vuelo.precio_base|default:vuelo.base_price }}</p>
+<p>Avión: {{ vuelo.avion.modelo }} | Precio base: ${{ vuelo.precio_base }}</p>
 <style>
 .seat{width:64px;height:64px;border-radius:8px;font-weight:600}
 .seat-free{background:#e7f7ee}.seat-res{background:#fff3cd}.seat-ocu{background:#f8d7da}
@@ -10,14 +10,20 @@
   <tr>
   {% for c in fila %}
     {% if c.estado == 'PEN' %}
-      <td class="seat seat-res">{{ c.a.numero|default:c.a.number }}<div><small>Reservado</small></div></td>
+      <td class="seat seat-res">{{ c.a.numero }}<div><small>Reservado</small></div></td>
     {% elif c.estado == 'CONF' %}
-      <td class="seat seat-ocu">{{ c.a.numero|default:c.a.number }}<div><small>Ocupado</small></div></td>
+      <td class="seat seat-ocu">{{ c.a.numero }}<div><small>Ocupado</small></div></td>
     {% else %}
-      <td class="seat seat-free">{{ c.a.numero|default:c.a.number }}
+      <td class="seat seat-free">{{ c.a.numero }}
         <div>
           {% if user.is_authenticated %}
-            <a class="btn btn-sm btn-outline-primary mt-1" href="{% url 'portal_crear_reserva' vuelo.id c.a.id %}">Elegir</a>
+            {% if user.is_authenticated %}
+{% if tiene_reserva_activa %}
+<a class="btn btn-sm btn-warning mt-1" href="{% url 'portal_cambiar_asiento' vuelo.id c.a.id %}">Cambiar</a>
+{% else %}
+<a class="btn btn-sm btn-outline-primary mt-1" href="{% url 'portal_crear_reserva' vuelo.id c.a.id %}">Elegir</a>
+{% endif %}
+{% endif %}
           {% else %}
             <a class="btn btn-sm btn-outline-secondary mt-1" href="/login/?next={% url 'portal_vuelo_detalle' vuelo.id %}">Login</a>
           {% endif %}

@@ -1,0 +1,31 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<style>
+  body { font-family: DejaVu Sans, Arial, sans-serif; font-size: 12pt; }
+  .card { border:1px solid #333; padding:16px; }
+  .row { margin-bottom: 8px; }
+  .label { font-weight: bold; width: 180px; display:inline-block; }
+  .qr { margin-top: 12px; }
+</style>
+</head>
+<body>
+<h2>Boleto electrónico</h2>
+<div class="card">
+  <div class="row"><span class="label">Código:</span> {{ reserva.codigo_reserva }}</div>
+  <div class="row"><span class="label">Pasajero:</span> {{ reserva.pasajero.nombre }} ({{ reserva.pasajero.documento }})</div>
+  <div class="row"><span class="label">Vuelo:</span> {{ reserva.vuelo.origen }} → {{ reserva.vuelo.destino }}</div>
+  <div class="row"><span class="label">Salida:</span> {{ reserva.vuelo.fecha_salida|date:"Y-m-d H:i" }}</div>
+  <div class="row"><span class="label">Asiento:</span> {{ reserva.asiento.numero }}</div>
+  <div class="row"><span class="label">Estado:</span> {{ reserva.get_estado_display|default:reserva.estado }}</div>
+
+  {% if reserva.boleto and reserva.boleto.codigo_barra and reserva.boleto.codigo_barra.url %}
+    <div class="qr"><img src="{{ reserva.boleto.codigo_barra.url }}" width="200" height="200" alt="QR"></div>
+  {% elif reserva.boleto and reserva.boleto.codigo_barra %}
+    <div class="row"><span class="label">QR (texto):</span> {{ reserva.boleto.codigo_barra }}</div>
+  {% endif %}
+</div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Crear cuenta</h3>
+<form method="post" class="row g-2">{% csrf_token %}
+  {{ form.as_p }}
+  <div class="col-12"><button class="btn btn-primary">Registrarme</button></div>
+</form>
+<p class="mt-3">¿Ya tenés cuenta? <a href="{% url 'login' %}">Ingresá</a></p>
+{% endblock %}
